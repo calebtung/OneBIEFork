@@ -7,7 +7,7 @@ from datetime import datetime
 import numpy as np
 import sys, getopt
 import cv2
-
+import skimage
 import os
 
 def interpret_output(output, img_width, img_height):
@@ -171,8 +171,8 @@ def main(argv):
 	net = caffe.Net(model_filename, weight_filename, caffe.TEST)
 	transformer = caffe.io.Transformer({'data': net.blobs['data'].data.shape})
 	transformer.set_transpose('data', (2,0,1))
-	img_out_dirname = '/export/purdue/TestOut'
-	img_in_dirname = '/export/purdue/TestIn'
+	img_in_dirname = '/export/purdue/data/12000_test_images/frames_jpg/'
+	img_out_dirname = '/export/purdue/TestOut/'
 
 	preprocess_file = open('preprocessing.csv', 'w')
 	fwdpass_file = open('fwdpass.csv', 'w')
@@ -208,7 +208,7 @@ def main(argv):
 			#print 'total time is " milliseconds', elapsedTime.total_seconds()*1000
 			#print out.iteritems()
 			img_cv = cv2.imread(img_filename, cv2.COLOR_RGB2BGR)
-			img_cv = cv2.resize(800, 450)
+			img_cv = cv2.resize(img_cv, (800, 450))
 			results = interpret_output(out['result'][0], img.shape[1], img.shape[0]) # fc27 instead of fc12 for yolo_small 
 			show_results(img_cv,results, img.shape[1], img.shape[0], (img_out_dirname + '/' + f),out_annotations_file)
 
