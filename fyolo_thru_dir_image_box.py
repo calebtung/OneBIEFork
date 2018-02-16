@@ -33,7 +33,7 @@ def interpret_output(output, img_width, img_height):
 				"tvmonitor"]
 	w_img = img_width
 	h_img = img_height
-	print w_img, h_img
+	#print w_img, h_img
 	threshold = 0.2
 	iou_threshold = 0.5
 	num_class = 20
@@ -129,7 +129,7 @@ def show_results(img,results, img_width, img_height,filename,outstream):
 			cv2.putText(img_cp,results[i][0] + ' : %.2f' % results[i][5],(xmin+5,ymin-7),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,0,0),1)	
 	if imshow :
 		cv2.imwrite(filename,img_cp)
-		print 'Writing to "', filename
+		#print 'Writing to "', filename
 		cv2.waitKey(1000)
 
 
@@ -171,8 +171,8 @@ def main(argv):
 	net = caffe.Net(model_filename, weight_filename, caffe.TEST)
 	transformer = caffe.io.Transformer({'data': net.blobs['data'].data.shape})
 	transformer.set_transpose('data', (2,0,1))
-	img_in_dirname = '/export/purdue/data/12000_test_images/frames_jpg/'
-	img_out_dirname = '/export/purdue/TestOut/'
+	img_in_dirname = '/export/purdue/TestIn' #'/export/purdue/data/12000_test_images/frames_jpg/'
+	img_out_dirname = '/export/purdue/TestOut'
 
 	preprocess_file = open('preprocessing.csv', 'w')
 	fwdpass_file = open('fwdpass.csv', 'w')
