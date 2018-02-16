@@ -138,6 +138,9 @@ def main(argv):
 	total_preprocess_sec = 0
 	total_fwdpass_sec = 0
 	imgs_processed = 0
+	total_skimage_sec = 0
+	total_resize_sec = 0
+	total_transform_sec = 0
 	
 	model_filename = ''
 	weight_filename = ''
@@ -187,11 +190,16 @@ def main(argv):
 			start = datetime.now()
 			# Instead of using Caffe's image loader, use a barebones version
 			img = skimage.img_as_float(skimage.io.imread(img_filename)).astype(np.float32)
+			skimage_end = datetime.now()
 			img = cv2.resize(img, (448,448)) # Resize in advance
+			resize_end = datetime.now()
 			inputs = img
 			transformed_data = np.asarray([transformer.preprocess('data', inputs)])
 			end = datetime.now()
 			elapsed_sec = (end-start).total_seconds()
+			total_skimage_sec += (skimage_end-start).total_seconds()
+			total_resize_sec += (resize_end-skimage_end).total_seconds()
+			total_transform_sec += (end-resize_end).total_seconds()
 			total_preprocess_sec += elapsed_sec
 			preprocess_file.write(str(elapsed_sec) + ',')
 
@@ -218,6 +226,9 @@ def main(argv):
 	print 'Total time spent: " sec', (end_all-start_all).total_seconds()
 	print 'AVERAGE MASTER FPS: " FPS', imgs_processed/(end_all-start_all).total_seconds()
 	print 'Average Preprocess/Image: "sec', total_preprocess_sec/imgs_processed
+	print 'Average Skimage-Preprocess/Image: "sec', total_skimage_sec/imgs_processed
+	print 'Average Resize-Preprocess/Image: "sec', total_resize_sec/imgs_processed
+	print 'Average Transform-Preprocess/Image: "sec', total_transform_sec/imgs_processed
 	print 'Average Fwdpass/Image: "sec', total_fwdpass_sec/imgs_processed
 
 	out_annotations_file.close()
