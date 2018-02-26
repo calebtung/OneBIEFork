@@ -142,6 +142,8 @@ def main(argv):
 	total_resize_sec = 0
 	total_transform_sec = 0
 	total_interpret_sec = 0
+	total_skimage_imread_sec = 0
+	total_skimage_asfloat_sec = 0
 	
 	model_filename = ''
 	weight_filename = ''
@@ -190,7 +192,12 @@ def main(argv):
 			# Preprocess the data
 			start = datetime.now()
 			# Instead of using Caffe's image loader, use a barebones version
-			img = skimage.img_as_float(skimage.io.imread(img_filename)).astype(np.float32)
+			#img = skimage.img_as_float(skimage.io.imread(img_filename)).astype(np.float32)
+			
+			imread_start = datetime.now()
+			imread_img = skimage.io.imread(img_filename)
+			imread_end = datetime.now()
+			img = skimage.img_as_float(imread_img).astype(np.float32)
 			skimage_end = datetime.now()
 			img = cv2.resize(img, (448,448)) # Resize in advance
 			resize_end = datetime.now()
@@ -199,6 +206,8 @@ def main(argv):
 			end = datetime.now()
 			elapsed_sec = (end-start).total_seconds()
 			total_skimage_sec += (skimage_end-start).total_seconds()
+			total_skimage_imread_sec += (imread_end - imread_start).total_seconds()
+			total_skimage_asfloat_sec += (skimage_end-imread_end).total_seconds()
 			total_resize_sec += (resize_end-skimage_end).total_seconds()
 			total_transform_sec += (end-resize_end).total_seconds()
 			total_preprocess_sec += elapsed_sec
