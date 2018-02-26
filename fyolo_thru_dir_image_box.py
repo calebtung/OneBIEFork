@@ -141,6 +141,7 @@ def main(argv):
 	total_skimage_sec = 0
 	total_resize_sec = 0
 	total_transform_sec = 0
+	total_interpret_sec = 0
 	
 	model_filename = ''
 	weight_filename = ''
@@ -217,7 +218,10 @@ def main(argv):
 			#print out.iteritems()
 			img_cv = cv2.imread(img_filename, cv2.COLOR_RGB2BGR)
 			img_cv = cv2.resize(img_cv, (800, 450))
+			interpret_start = datetime.now()
 			results = interpret_output(out['result'][0], img.shape[1], img.shape[0]) # fc27 instead of fc12 for yolo_small 
+			interpret_end = datetime.now()
+			total_interpret_sec += (interpret_end-interpret_start).total_seconds()
 			show_results(img_cv,results, img.shape[1], img.shape[0], (img_out_dirname + '/' + f),out_annotations_file)
 
 	end_all = datetime.now()
@@ -230,6 +234,7 @@ def main(argv):
 	print 'Average Resize-Preprocess/Image: "sec', total_resize_sec/imgs_processed
 	print 'Average Transform-Preprocess/Image: "sec', total_transform_sec/imgs_processed
 	print 'Average Fwdpass/Image: "sec', total_fwdpass_sec/imgs_processed
+	print 'Average Interpret/Image: "sec', total_interpret_sec/imgs_processed
 
 	out_annotations_file.close()
 	preprocess_file.close()
