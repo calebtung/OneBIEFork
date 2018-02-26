@@ -206,7 +206,7 @@ def main(argv):
 			end = datetime.now()
 			elapsed_sec = (end-start).total_seconds()
 			total_skimage_sec += (skimage_end-start).total_seconds()
-			total_skimage_imread_sec += (imread_end - imread_start).total_seconds()
+			total_skimage_imread_sec += (imread_end-imread_start).total_seconds()
 			total_skimage_asfloat_sec += (skimage_end-imread_end).total_seconds()
 			total_resize_sec += (resize_end-skimage_end).total_seconds()
 			total_transform_sec += (end-resize_end).total_seconds()
@@ -244,6 +244,8 @@ def main(argv):
 	print 'Average Transform-Preprocess/Image: "sec', total_transform_sec/imgs_processed
 	print 'Average Fwdpass/Image: "sec', total_fwdpass_sec/imgs_processed
 	print 'Average Interpret/Image: "sec', total_interpret_sec/imgs_processed
+	print 'Average Skimage Imread/Image: "sec', total_skimage_imread_sec/imgs_processed
+	print 'Average Skimage AsFloat/Image: "sec', total_skimage_asfloat_sec/imgs_processed
 
 	out_annotations_file.close()
 	preprocess_file.close()
