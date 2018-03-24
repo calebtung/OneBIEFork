@@ -128,9 +128,10 @@ def show_results(img,results, img_width, img_height,filename,outstream):
 			cv2.rectangle(img_cp,(xmin,ymin-20),(xmax,ymin),(125,125,125),-1)
 			cv2.putText(img_cp,results[i][0] + ' : %.2f' % results[i][5],(xmin+5,ymin-7),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,0,0),1)	
 	if imshow :
-		cv2.imwrite(filename,img_cp)
-		#print 'Writing to "', filename
-		cv2.waitKey(1000)
+		pass
+		# cv2.imwrite(filename,img_cp)
+		# #print 'Writing to "', filename
+		# cv2.waitKey(1000)
 
 
 
@@ -187,7 +188,7 @@ def main(argv):
 		start_all = datetime.now()
 		for f in filenames:
 			print f
-			img_filename = os.path.join(img_in_dirname, f)
+			img_filename = os.path.join(root, f)
 
 			# Preprocess the data
 			start = datetime.now()
